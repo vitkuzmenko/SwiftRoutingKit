@@ -6,6 +6,8 @@
 //  Copyright © 2021 Avatar Lab. All rights reserved.
 //
 
+#if os(iOS)
+
 import UIKit
 
 public final class PopoverPresentationControllerDelegate: NSObject {
@@ -19,3 +21,5 @@ extension PopoverPresentationControllerDelegate: UIPopoverPresentationController
     }
     
 }
+
+#endif
