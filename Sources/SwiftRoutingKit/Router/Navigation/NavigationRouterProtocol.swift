@@ -8,6 +8,10 @@
 
 import UIKit
 
+public enum NavigationRouterPresentaionMode {
+    case root(hideNavigationBar: Bool), push(animated: Bool), present(animated: Bool)
+}
+
 public protocol NavigationRouterProtocol: RouterProtocol {
     
     var navigationController: UINavigationController { get }
@@ -30,6 +34,8 @@ public protocol NavigationRouterProtocol: RouterProtocol {
     func setRootScene(_ scene: Scene?, hideBar: Bool)
     func setScenes(_ scene: [Scene])
     
+    func show(scene: Scene?, mode: NavigationRouterPresentaionMode)
+    
 }
 
 extension NavigationRouterProtocol {
@@ -48,6 +54,17 @@ extension NavigationRouterProtocol {
     
     public func setRootScene(_ scene: Scene?) {
         setRootScene(scene, hideBar: false)
+    }
+    
+    public func show(scene: Scene?, mode: NavigationRouterPresentaionMode) {
+        switch mode {
+        case let .root(hideNavigationBar):
+            setRootScene(scene, hideBar: hideNavigationBar)
+        case let .push(animated):
+            push(scene, animated: animated)
+        case let .present(animated):
+            present(scene, animated: animated)
+        }
     }
     
 }

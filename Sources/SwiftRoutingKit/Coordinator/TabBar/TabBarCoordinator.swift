@@ -6,7 +6,7 @@
 //  Copyright © 2019 Kuzmenko.info. All rights reserved.
 //
 
-import UIKit
+import Foundation
 import Swinject
 
 open class TabBarCoordinator: Coordinator, TabBarCoordinatorProtocol {
@@ -31,14 +31,25 @@ open class TabBarCoordinator: Coordinator, TabBarCoordinatorProtocol {
         return childCoordinators[router.tabBarController.selectedIndex]
     }
     
-    public func selectFirst<T: CoordinatorProtocol>(of: T.Type) {
+    public func selectFirst<T: CoordinatorProtocol>(of: T.Type, start: Bool = true) {
         if let index = childCoordinators.firstIndex(where: { $0 is T }) {
             router.tabBarController.selectedIndex = index
-            startCoorinatorForSelectedIndexIfNeeded()
+            if start {
+                startCoorinatorForSelectedIndexIfNeeded()
+            }
+        }
+    }
+    
+    public func getFirst<T: CoordinatorProtocol>(of: T.Type) -> T? {
+        if let index = childCoordinators.firstIndex(where: { $0 is T }) {
+            return childCoordinators[index] as? T
+        } else {
+            return nil
         }
     }
 
     public func startCoorinatorForSelectedIndexIfNeeded() {
+        router.tabBarController.selectedIndex = router.tabBarController.selectedIndex
         if let coordinator = self.childCoordinators[router.tabBarController.selectedIndex] as? NavigationCoordinator,
             coordinator.router.navigationController.viewControllers.isEmpty {
             coordinator.start()

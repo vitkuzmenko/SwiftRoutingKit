@@ -15,4 +15,10 @@ public protocol CoordinatorProtocol: AnyObject {
     
     func start()
     
+    func addChild(_ coordinator: Coordinator?)
+    
+    func child<T: Coordinator>(for type: T.Type) -> T?
+    
+    func removeChild(_ coordinator: Coordinator?)
+    
 }

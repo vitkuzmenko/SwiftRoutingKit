@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "SwiftRoutingKit"
-  s.version      = "1.0.0"
+  s.version      = "1.0.1"
   s.summary      = "Routing tools for UIKit swift application"
 
   s.homepage     = "https://github.com/vitkuzmenko/SwiftRoutingKit.git"
