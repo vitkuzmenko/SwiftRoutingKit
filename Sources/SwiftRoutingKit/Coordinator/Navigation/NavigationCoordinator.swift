@@ -6,7 +6,7 @@
 //  Copyright © 2019 Kuzmenko.info. All rights reserved.
 //
 
-import Foundation
+import UIKit
 import Swinject
 
 open class NavigationCoordinator: Coordinator, NavigationCoordinatorProtocol {

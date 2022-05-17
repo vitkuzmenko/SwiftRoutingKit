@@ -8,6 +8,7 @@
 
 import Foundation
 import Swinject
+import UIKit
 
 open class TabBarCoordinator: Coordinator, TabBarCoordinatorProtocol {
     
@@ -62,6 +63,16 @@ extension TabBarCoordinator: UITabBarControllerDelegate {
  
     public func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
         startCoorinatorForSelectedIndexIfNeeded()
+        if let delegate = router.tabBarController as? UITabBarControllerDelegate {
+            delegate.tabBarController?(tabBarController, didSelect: viewController)
+        }
+    }
+    
+    public func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
+        if let delegate = router.tabBarController as? UITabBarControllerDelegate, let value = delegate.tabBarController?(tabBarController, shouldSelect: viewController) {
+            return value
+        }
+        return true
     }
     
 }
