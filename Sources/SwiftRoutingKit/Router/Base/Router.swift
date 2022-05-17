@@ -35,7 +35,11 @@ open class Router: NSObject, RouterProtocol {
     
     open func present(_ scene: Scene?, animated: Bool) {
         guard let controller = scene?.toScene() else { return }
-        rootViewController.present(controller, animated: animated, completion: nil)
+        if let presented = rootViewController.presentedViewController {
+            presented.present(controller, animated: animated, completion: nil)
+        } else {
+            rootViewController.present(controller, animated: animated, completion: nil)
+        }
     }
     
     open func dismiss(animated: Bool, completion: (() -> Void)?) {
