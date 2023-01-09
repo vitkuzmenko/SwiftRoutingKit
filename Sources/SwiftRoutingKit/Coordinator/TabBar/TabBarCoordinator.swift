@@ -14,6 +14,8 @@ open class TabBarCoordinator: Coordinator, TabBarCoordinatorProtocol {
     
     public let router: TabBarRouterProtocol
     
+    public var childTabCoordinators: [CoordinatorProtocol] = []
+    
     public init(router: TabBarRouterProtocol, resolver: Resolver) {
         self.router = router
         super.init(resolver: resolver)
@@ -21,7 +23,7 @@ open class TabBarCoordinator: Coordinator, TabBarCoordinatorProtocol {
     }
     
     public func setFlows(_ coordinators: [NavigationCoordinatorProtocol], initialIndex: Int) {
-        childCoordinators = coordinators
+        childTabCoordinators = coordinators
         let scenes = coordinators.compactMap({ $0.router.navigationController })
         router.set(scenes)
         router.tabBarController.selectedIndex = initialIndex
@@ -29,11 +31,11 @@ open class TabBarCoordinator: Coordinator, TabBarCoordinatorProtocol {
     }
     
     public var selectedCoordinator: CoordinatorProtocol {
-        return childCoordinators[router.tabBarController.selectedIndex]
+        return childTabCoordinators[router.tabBarController.selectedIndex]
     }
     
     public func selectFirst<T: CoordinatorProtocol>(of: T.Type, start: Bool = true) {
-        if let index = childCoordinators.firstIndex(where: { $0 is T }) {
+        if let index = childTabCoordinators.firstIndex(where: { $0 is T }) {
             router.tabBarController.selectedIndex = index
             if start {
                 startCoorinatorForSelectedIndexIfNeeded()
@@ -42,8 +44,8 @@ open class TabBarCoordinator: Coordinator, TabBarCoordinatorProtocol {
     }
     
     public func getFirst<T: CoordinatorProtocol>(of: T.Type) -> T? {
-        if let index = childCoordinators.firstIndex(where: { $0 is T }) {
-            return childCoordinators[index] as? T
+        if let index = childTabCoordinators.firstIndex(where: { $0 is T }) {
+            return childTabCoordinators[index] as? T
         } else {
             return nil
         }
@@ -51,7 +53,7 @@ open class TabBarCoordinator: Coordinator, TabBarCoordinatorProtocol {
 
     public func startCoorinatorForSelectedIndexIfNeeded() {
         router.tabBarController.selectedIndex = router.tabBarController.selectedIndex
-        if let coordinator = self.childCoordinators[router.tabBarController.selectedIndex] as? NavigationCoordinator,
+        if let coordinator = self.childTabCoordinators[router.tabBarController.selectedIndex] as? NavigationCoordinator,
             coordinator.router.navigationController.viewControllers.isEmpty {
             coordinator.start()
         }
