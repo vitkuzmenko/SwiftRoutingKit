@@ -1,7 +1,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "SwiftRoutingKit"
-  s.version      = "1.1.0"
+  s.version      = "1.1.2"
   s.summary      = "Routing tools for UIKit swift application"
 
   s.homepage     = "https://github.com/vitkuzmenko/SwiftRoutingKit.git"
@@ -14,7 +14,6 @@ Pod::Spec.new do |s|
   s.swift_version = '5.4'
 
   s.ios.deployment_target = '9.0'
-  s.tvos.deployment_target = '9.0'
 
   s.source       = { :git => s.homepage, :tag => s.version.to_s }
 
