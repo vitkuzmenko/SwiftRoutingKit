@@ -10,6 +10,10 @@ import UIKit
 
 public final class NavigationRouter: Router, NavigationRouterProtocol {
     
+    deinit {
+        navigationController.viewControllers = []
+    }
+    
     private var completions: [UIViewController: () -> Void] = [:]
     
     public var navigationController: UINavigationController {
