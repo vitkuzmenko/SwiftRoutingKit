@@ -1,3 +1,5 @@
 /Sources/SwiftRoutingKit/Coordinator/.DS_Store
 /Sources/SwiftRoutingKit/Router/.DS_Store
 /.DS_Store
+.DS_Store
+*.xcuserstate
