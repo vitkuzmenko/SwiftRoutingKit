@@ -8,6 +8,11 @@
 
 import UIKit
 
+public enum KeyAnimation {
+    case slideIn
+    case slideOut
+}
+
 public protocol RouterProtocol: Scene {
     
     var window: UIWindow? { get }
@@ -19,6 +24,7 @@ public protocol RouterProtocol: Scene {
     func dismiss(animated: Bool, completion: (() -> Void)?)
     
     func makeKeyIfNeeded()
+    func makeKeyIfNeeded(animation: KeyAnimation)
     
 }
 
