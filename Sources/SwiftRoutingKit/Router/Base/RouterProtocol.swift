@@ -20,7 +20,10 @@ public protocol RouterProtocol: Scene {
     func present(_ scene: Scene?)
     func present(_ scene: Scene?, animated: Bool)
     
+    @discardableResult
     func presentInNavigationController(_ scene: Scene?) -> UINavigationController
+    
+    @discardableResult
     func presentInNavigationController(_ scene: Scene?, configuration: @escaping (UINavigationController) -> Void) -> UINavigationController
 
     func dismiss()
