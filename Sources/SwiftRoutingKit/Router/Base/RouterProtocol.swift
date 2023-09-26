@@ -19,6 +19,9 @@ public protocol RouterProtocol: Scene {
     
     func present(_ scene: Scene?)
     func present(_ scene: Scene?, animated: Bool)
+    
+    func presentInNavigationController(_ scene: Scene?) -> UINavigationController
+    func presentInNavigationController(_ scene: Scene?, configuration: @escaping (UINavigationController) -> Void) -> UINavigationController
 
     func dismiss()
     func dismiss(animated: Bool, completion: (() -> Void)?)
@@ -33,6 +36,21 @@ extension RouterProtocol {
     
     public func present(_ scene: Scene?) {
         present(scene, animated: true)
+    }
+    
+    public func presentInNavigationController(
+        _ scene: Scene?
+    ) -> UINavigationController {
+        presentInNavigationController(scene, configuration: { _ in })
+    }
+    
+    public func presentInNavigationController(
+        _ scene: Scene?,
+        configuration: @escaping (UINavigationController) -> Void
+    ) -> UINavigationController {
+        let nc = UINavigationController(rootViewController: scene!.toScene())
+        configuration(nc)
+        return nc
     }
     
     public func dismiss() {
