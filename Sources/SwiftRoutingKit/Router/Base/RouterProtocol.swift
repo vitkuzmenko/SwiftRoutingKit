@@ -50,6 +50,7 @@ extension RouterProtocol {
     ) -> UINavigationController {
         let nc = UINavigationController(rootViewController: scene!.toScene())
         configuration(nc)
+        present(nc)
         return nc
     }
     
