@@ -89,6 +89,17 @@ public final class NavigationRouter: Router, NavigationRouterProtocol {
         return true
     }
     
+    public func popToScene<T: Scene>(_ scene: T.Type, animated: Bool) -> Bool {
+        popToScene(scene, animated: animated, completion: nil)
+    }
+    
+    public func popToScene<T: Scene>(_ scene: T.Type, animated: Bool, completion: (() -> Void)?) -> Bool {
+        guard let viewController = navigationController.viewControllers.first(where: { $0 is T }) else {
+            return false
+        }
+        return popToScene(viewController, animated: animated, completion: completion)
+    }
+    
     public func setRootScene(_ scene: Scene?, hideBar: Bool) {
         guard let controller = scene?.toScene() else {
             fatalError("Scene cannot be nil")

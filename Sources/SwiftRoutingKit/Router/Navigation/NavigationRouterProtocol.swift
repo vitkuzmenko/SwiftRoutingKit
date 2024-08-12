@@ -33,6 +33,11 @@ public protocol NavigationRouterProtocol: RouterProtocol {
     @discardableResult
     func popToScene(_ scene: Scene?, animated: Bool, completion: (() -> Void)?) -> Bool
     
+    @discardableResult
+    func popToScene<T: Scene>(_ scene: T.Type, animated: Bool) -> Bool
+    @discardableResult
+    func popToScene<T: Scene>(_ scene: T.Type, animated: Bool, completion: (() -> Void)?) -> Bool
+    
     func popToRootScene(animated: Bool)
     
     func setRootScene(_ scene: Scene?)
