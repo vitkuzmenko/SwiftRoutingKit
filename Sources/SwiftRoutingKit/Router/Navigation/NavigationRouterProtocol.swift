@@ -34,9 +34,9 @@ public protocol NavigationRouterProtocol: RouterProtocol {
     func popToScene(_ scene: Scene?, animated: Bool, completion: (() -> Void)?) -> Bool
     
     @discardableResult
-    func popToFirstScene<T: Scene>(where predicate: (UIViewController) -> Bool, animated: Bool) -> T?
+    func popToFirstScene<T>(where predicate: (UIViewController) -> Bool, animated: Bool) -> T?
     @discardableResult
-    func popToFirstScene<T: Scene>(where predicate: (UIViewController) -> Bool, animated: Bool, completion: ((T) -> Void)?) -> T?
+    func popToFirstScene<T>(where predicate: (UIViewController) -> Bool, animated: Bool, completion: ((T) -> Void)?) -> T?
     
     func popToRootScene(animated: Bool)
     
