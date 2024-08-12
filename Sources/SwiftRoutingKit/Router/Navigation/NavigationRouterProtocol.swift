@@ -27,7 +27,12 @@ public protocol NavigationRouterProtocol: RouterProtocol {
     
     func popScene()
     func popScene(animated: Bool)
-    func popToScene(_ scene: Scene?, animated: Bool)
+    
+    @discardableResult
+    func popToScene(_ scene: Scene?, animated: Bool) -> Bool
+    @discardableResult
+    func popToScene(_ scene: Scene?, animated: Bool, completion: (() -> Void)?) -> Bool
+    
     func popToRootScene(animated: Bool)
     
     func setRootScene(_ scene: Scene?)

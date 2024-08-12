@@ -66,11 +66,27 @@ public final class NavigationRouter: Router, NavigationRouterProtocol {
         }
     }
     
-    public func popToScene(_ scene: Scene?, animated: Bool) {
+    public func popToScene(_ scene: (any Scene)?, animated: Bool) -> Bool {
+        popToScene(scene, animated: animated, completion: nil)
+    }
+    
+    public func popToScene(_ scene: (any Scene)?, animated: Bool, completion: (() -> Void)?) -> Bool {
         guard let viewController = navigationController.viewControllers.first(where: { $0 == scene?.toScene() }) else {
-            return
+            return false
         }
-        navigationController.popToViewController(viewController, animated: animated)
+        let popBlock = { [weak self] in
+            self?.navigationController.popToViewController(viewController, animated: animated)
+        }
+        if animated, let completion {
+            CATransaction.begin()
+            CATransaction.setCompletionBlock(completion)
+            _ = popBlock()
+            CATransaction.commit()
+        } else {
+            _ = popBlock()
+            completion?()
+        }
+        return true
     }
     
     public func setRootScene(_ scene: Scene?, hideBar: Bool) {
