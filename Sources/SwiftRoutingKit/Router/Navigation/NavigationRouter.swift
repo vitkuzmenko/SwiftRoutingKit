@@ -66,10 +66,12 @@ public final class NavigationRouter: Router, NavigationRouterProtocol {
         }
     }
     
+    @discardableResult
     public func popToScene(_ scene: (any Scene)?, animated: Bool) -> Bool {
         popToScene(scene, animated: animated, completion: nil)
     }
     
+    @discardableResult
     public func popToScene(_ scene: (any Scene)?, animated: Bool, completion: (() -> Void)?) -> Bool {
         guard let viewController = navigationController.viewControllers.first(where: { $0 == scene?.toScene() }) else {
             return false
@@ -89,15 +91,16 @@ public final class NavigationRouter: Router, NavigationRouterProtocol {
         return true
     }
     
-    public func popToScene<T: Scene>(_ scene: T.Type, animated: Bool) -> Bool {
-        popToScene(scene, animated: animated, completion: nil)
+    public func popToFirstScene<T: Scene>(_ scene: T.Type, animated: Bool) -> T? {
+        popToFirstScene(scene, animated: animated, completion: nil)
     }
     
-    public func popToScene<T: Scene>(_ scene: T.Type, animated: Bool, completion: (() -> Void)?) -> Bool {
-        guard let viewController = navigationController.viewControllers.first(where: { $0 is T }) else {
-            return false
+    public func popToFirstScene<T: Scene>(_ scene: T.Type, animated: Bool, completion: (() -> Void)?) -> T? {
+        guard let viewController = navigationController.viewControllers.first(where: { $0 is T }) as? T else {
+            return nil
         }
-        return popToScene(viewController, animated: animated, completion: completion)
+        popToScene(viewController, animated: animated, completion: completion)
+        return viewController
     }
     
     public func setRootScene(_ scene: Scene?, hideBar: Bool) {
