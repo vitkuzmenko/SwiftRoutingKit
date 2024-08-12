@@ -91,12 +91,12 @@ public final class NavigationRouter: Router, NavigationRouterProtocol {
         return true
     }
     
-    public func popToFirstScene<T: Scene>(_ scene: T.Type, animated: Bool) -> T? {
+    public func popToFirstScene<T: Scene>(_ scene: Protocol, animated: Bool) -> T? {
         popToFirstScene(scene, animated: animated, completion: nil)
     }
     
-    public func popToFirstScene<T: Scene>(_ scene: T.Type, animated: Bool, completion: ((T) -> Void)?) -> T? {
-        guard let viewController = navigationController.viewControllers.first(where: { $0 is T }) as? T else {
+    public func popToFirstScene<T: Scene>(_ scene: Protocol, animated: Bool, completion: ((T) -> Void)?) -> T? {
+        guard let viewController = navigationController.viewControllers.first(where: { $0.conforms(to: scene) }) as? T else {
             return nil
         }
         popToScene(viewController, animated: animated) {
