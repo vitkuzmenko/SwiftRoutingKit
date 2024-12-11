@@ -8,7 +8,7 @@
 
 import UIKit
 
-public final class NavigationRouter: Router, NavigationRouterProtocol {
+public final class NavigationRouter: Router, NavigationRouterProtocol, UIPopoverPresentationControllerDelegate {
     
     deinit {
         navigationController.viewControllers = []
@@ -133,6 +133,20 @@ public final class NavigationRouter: Router, NavigationRouterProtocol {
         guard let completion = completions[controller] else { return }
         completion()
         completions.removeValue(forKey: controller)
+    }
+    
+    public func presentPopover(scene: Scene?, sourceView: UIView) {
+        guard let vc = scene?.toScene() else { return }
+        vc.modalPresentationStyle = .popover
+        vc.popoverPresentationController?.sourceView = sourceView
+        vc.popoverPresentationController?.sourceRect = sourceView.bounds
+        vc.popoverPresentationController?.permittedArrowDirections = [.up, .down]
+        vc.popoverPresentationController?.delegate = self
+        navigationController.present(vc, animated: true)
+    }
+    
+    public func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+        .none
     }
     
 }

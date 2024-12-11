@@ -9,7 +9,7 @@
 import UIKit
 
 public enum NavigationRouterPresentaionMode {
-    case root(hideNavigationBar: Bool), push(animated: Bool), present(animated: Bool)
+    case root(hideNavigationBar: Bool), push(animated: Bool), present(animated: Bool), popover(UIView)
 }
 
 public protocol NavigationRouterProtocol: RouterProtocol {
@@ -46,6 +46,8 @@ public protocol NavigationRouterProtocol: RouterProtocol {
     
     func show(scene: Scene?, mode: NavigationRouterPresentaionMode)
     
+    func presentPopover(scene: Scene?, sourceView: UIView)
+    
 }
 
 extension NavigationRouterProtocol {
@@ -74,6 +76,8 @@ extension NavigationRouterProtocol {
             push(scene, animated: animated)
         case let .present(animated):
             present(scene, animated: animated)
+        case let .popover(sourceView):
+            presentPopover(scene: scene, sourceView: sourceView)
         }
     }
     
