@@ -10,7 +10,7 @@ import Foundation
 import Swinject
 import UIKit
 
-open class TabBarCoordinator: Coordinator, TabBarCoordinatorProtocol {
+open class TabBarCoordinator: Coordinator, TabBarCoordinatorProtocol, Routable {
     
     public let router: TabBarRouterProtocol
     

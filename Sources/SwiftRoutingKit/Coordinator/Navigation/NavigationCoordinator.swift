@@ -9,7 +9,7 @@
 import UIKit
 import Swinject
 
-open class NavigationCoordinator: Coordinator, NavigationCoordinatorProtocol {
+open class NavigationCoordinator: Coordinator, NavigationCoordinatorProtocol, Routable {
     
     public let router: NavigationRouterProtocol
     

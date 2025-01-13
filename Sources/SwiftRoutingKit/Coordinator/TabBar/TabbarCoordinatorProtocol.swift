@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol TabBarCoordinatorProtocol: CoordinatorProtocol, Routable {
+public protocol TabBarCoordinatorProtocol: CoordinatorProtocol {
     
     var router: TabBarRouterProtocol { get }
     
