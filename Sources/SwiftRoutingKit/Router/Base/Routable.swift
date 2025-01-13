@@ -7,10 +7,9 @@
 
 import Foundation
 
-public protocol Routable {
+public protocol Presentable {
     
-    associatedtype R: RouterProtocol
-    
-    var router: R { get }
+    func present(_ scene: Scene?)
+    func present(_ scene: Scene?, animated: Bool)
     
 }

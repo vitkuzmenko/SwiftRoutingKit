@@ -8,8 +8,8 @@
 
 import Foundation
 
-public protocol TabBarCoordinatorProtocol: CoordinatorProtocol {
+public protocol TabBarCoordinatorProtocol: CoordinatorProtocol, Presentable {
     
-    func setFlows(_ coordinators: [any NavigationCoordinatorProtocol], initialIndex: Int)
+    func setFlows(_ coordinators: [NavigationCoordinatorProtocol], initialIndex: Int)
     
 }

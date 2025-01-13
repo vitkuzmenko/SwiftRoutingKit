@@ -12,17 +12,17 @@ import UIKit
 
 open class TabBarCoordinator: Coordinator, TabBarCoordinatorProtocol {
     
-    public let router: any TabBarRouterProtocol
+    public let router: TabBarRouterProtocol
     
     public var childTabCoordinators: [CoordinatorProtocol] = []
     
-    public init(router: some TabBarRouterProtocol, resolver: Resolver) {
+    public init(router: TabBarRouterProtocol, resolver: Resolver) {
         self.router = router
         super.init(resolver: resolver)
         router.tabBarController.delegate = self
     }
     
-    public func setFlows(_ coordinators: [any NavigationCoordinatorProtocol], initialIndex: Int) {
+    public func setFlows(_ coordinators: [NavigationCoordinatorProtocol], initialIndex: Int) {
         childTabCoordinators = coordinators
         let scenes = coordinators.compactMap({ $0.router.navigationController })
         router.set(scenes)
@@ -57,6 +57,14 @@ open class TabBarCoordinator: Coordinator, TabBarCoordinatorProtocol {
             coordinator.router.navigationController.viewControllers.isEmpty {
             coordinator.start()
         }
+    }
+    
+    public func present(_ scene: (any Scene)?) {
+        router.present(scene)
+    }
+    
+    public func present(_ scene: (any Scene)?, animated: Bool) {
+        router.present(scene, animated: animated)
     }
     
 }

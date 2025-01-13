@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol NavigationCoordinatorProtocol: CoordinatorProtocol, Scene {
+public protocol NavigationCoordinatorProtocol: CoordinatorProtocol, Scene, Presentable {
     
     var router: NavigationRouterProtocol { get }
     
