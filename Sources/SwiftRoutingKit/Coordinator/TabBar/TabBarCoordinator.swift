@@ -10,13 +10,13 @@ import Foundation
 import Swinject
 import UIKit
 
-open class TabBarCoordinator: Coordinator, TabBarCoordinatorProtocol, Routable {
+open class TabBarCoordinator: Coordinator, TabBarCoordinatorProtocol {
     
-    public let router: TabBarRouterProtocol
+    public let router: any TabBarRouterProtocol
     
     public var childTabCoordinators: [CoordinatorProtocol] = []
     
-    public init(router: TabBarRouterProtocol, resolver: Resolver) {
+    public init(router: some TabBarRouterProtocol, resolver: Resolver) {
         self.router = router
         super.init(resolver: resolver)
         router.tabBarController.delegate = self

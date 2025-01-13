@@ -9,7 +9,7 @@ import Foundation
 
 public protocol Routable {
     
-    associatedtype R = RouterProtocol
+    associatedtype R: RouterProtocol
     
     var router: R { get }
     

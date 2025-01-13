@@ -9,9 +9,9 @@
 import UIKit
 import Swinject
 
-open class NavigationCoordinator: Coordinator, NavigationCoordinatorProtocol, Routable {
+open class NavigationCoordinator: Coordinator, NavigationCoordinatorProtocol {
     
-    public let router: NavigationRouterProtocol
+    public let router: any NavigationRouterProtocol
     
     public var flowDidDismiss: (() -> Void)? = nil
     

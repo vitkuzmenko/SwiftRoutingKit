@@ -10,8 +10,6 @@ import Foundation
 
 public protocol TabBarCoordinatorProtocol: CoordinatorProtocol {
     
-    var router: TabBarRouterProtocol { get }
-    
     func setFlows(_ coordinators: [any NavigationCoordinatorProtocol], initialIndex: Int)
     
 }
