@@ -8,10 +8,10 @@
 
 import Foundation
 
-public protocol TabBarCoordinatorProtocol: CoordinatorProtocol {
+public protocol TabBarCoordinatorProtocol: CoordinatorProtocol, Routable {
     
     var router: TabBarRouterProtocol { get }
     
-    func setFlows(_ coordinators: [NavigationCoordinatorProtocol], initialIndex: Int)
+    func setFlows(_ coordinators: [any NavigationCoordinatorProtocol], initialIndex: Int)
     
 }

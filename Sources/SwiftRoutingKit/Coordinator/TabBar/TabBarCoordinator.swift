@@ -22,7 +22,7 @@ open class TabBarCoordinator: Coordinator, TabBarCoordinatorProtocol {
         router.tabBarController.delegate = self
     }
     
-    public func setFlows(_ coordinators: [NavigationCoordinatorProtocol], initialIndex: Int) {
+    public func setFlows(_ coordinators: [any NavigationCoordinatorProtocol], initialIndex: Int) {
         childTabCoordinators = coordinators
         let scenes = coordinators.compactMap({ $0.router.navigationController })
         router.set(scenes)
