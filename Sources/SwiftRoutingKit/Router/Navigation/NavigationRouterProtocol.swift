@@ -24,6 +24,7 @@ public protocol NavigationRouterProtocol: RouterProtocol {
     func push(_ scene: Scene?, animated: Bool, completion: (() -> Void)?)
     
     func cut(fromScene: Scene?, toScene: Scene?)
+    func cut(scene: Scene?)
     
     func popScene()
     func popScene(animated: Bool)

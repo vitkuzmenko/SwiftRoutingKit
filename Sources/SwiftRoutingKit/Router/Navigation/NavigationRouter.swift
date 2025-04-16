@@ -60,6 +60,12 @@ public final class NavigationRouter: Router, NavigationRouterProtocol, UIPopover
         }
     }
     
+    public func cut(scene: (any Scene)?) {
+        self.navigationController.viewControllers.removeAll { rhs in
+            rhs === scene?.toScene()
+        }
+    }
+    
     public func popScene(animated: Bool) {
         if let controller = navigationController.popViewController(animated: animated) {
             runCompletion(for: controller)
