@@ -66,7 +66,7 @@ public final class NavigationRouter: Router, NavigationRouterProtocol, UIPopover
         }
     }
     
-    public func cut<T: Scene>(allScenes type: T.Type) {
+    public func cut<T>(allScenes type: T.Type) {
         self.navigationController.viewControllers.removeAll { rhs in
             rhs is T
         }
