@@ -25,6 +25,7 @@ public protocol NavigationRouterProtocol: RouterProtocol {
     
     func cut(fromScene: Scene?, toScene: Scene?)
     func cut(scene: Scene?)
+    func cut<T: Scene>(allScenes type: T.Type)
     
     func popScene()
     func popScene(animated: Bool)
