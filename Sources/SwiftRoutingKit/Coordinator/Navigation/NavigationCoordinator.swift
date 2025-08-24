@@ -20,6 +20,14 @@ open class NavigationCoordinator: Coordinator, NavigationCoordinatorProtocol {
         super.init(resolver: resolver)
         router.navigationController.presentationController?.delegate = self
     }
+    
+    public func present(_ scene: (any Scene)?) {
+        router.present(scene)
+    }
+    
+    public func present(_ scene: (any Scene)?, animated: Bool) {
+        router.present(scene, animated: animated)
+    }
 
 }
 

@@ -53,10 +53,23 @@ open class TabBarCoordinator: Coordinator, TabBarCoordinatorProtocol {
 
     public func startCoorinatorForSelectedIndexIfNeeded() {
         router.tabBarController.selectedIndex = router.tabBarController.selectedIndex
-        if let coordinator = self.childTabCoordinators[router.tabBarController.selectedIndex] as? NavigationCoordinator,
-            coordinator.router.navigationController.viewControllers.isEmpty {
-            coordinator.start()
+        if
+            let coordinator = self.childTabCoordinators[router.tabBarController.selectedIndex] as? NavigationCoordinator
+        {
+            if coordinator.router.navigationController.viewControllers.isEmpty {
+                coordinator.start()
+            } else {
+                coordinator.impact()
+            }
         }
+    }
+    
+    public func present(_ scene: (any Scene)?) {
+        router.present(scene)
+    }
+    
+    public func present(_ scene: (any Scene)?, animated: Bool) {
+        router.present(scene, animated: animated)
     }
     
 }

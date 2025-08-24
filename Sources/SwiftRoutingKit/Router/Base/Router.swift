@@ -22,7 +22,7 @@ open class Router: NSObject, RouterProtocol {
     
     let rootViewController: UIViewController
     
-    open var window: UIWindow?
+    open weak var window: UIWindow?
     
     init(rootViewController: UIViewController, window: UIWindow?) {
         self.rootViewController = rootViewController
@@ -52,4 +52,114 @@ open class Router: NSObject, RouterProtocol {
         }
     }
     
+    open func makeKeyIfNeeded(animation: KeyAnimation) {
+        switch animation {
+        case .slideIn:
+            makeKeyIfNeededWithSlideInAnimation()
+        case .slideOut:
+            makeKeyIfNeededWithSlideOutAnimation()
+        }
+    }
+    
+    private func makeKeyIfNeededWithSlideInAnimation() {
+        guard let window = window else {
+            return makeKeyIfNeeded()
+        }
+        
+        let image = window.rootViewController!.view.srk_takeSnapshot()
+        
+        let imageView = UIImageView(image: image)
+        imageView.frame = window.bounds
+        
+        window.addSubview(imageView)
+        
+        let backdrop = UIView(frame: window.bounds)
+        backdrop.backgroundColor = .black
+        backdrop.alpha = 0
+        
+        window.insertSubview(backdrop, aboveSubview: imageView)
+        
+        makeKeyIfNeeded()
+        
+        rootViewController.view.transform = .init(
+            translationX: -window.bounds.width,
+            y: .zero
+        )
+        
+        UIView.animate(
+            withDuration: 0.6,
+            delay: 0,
+            usingSpringWithDamping: 0.8,
+            initialSpringVelocity: 2,
+            options: []
+        ) {
+            imageView.transform = CGAffineTransform(
+                translationX: imageView.frame.width / 2,
+                y: .zero
+            )
+            backdrop.alpha = 1
+            self.rootViewController.view.transform = .identity
+        } completion: { _ in
+            imageView.removeFromSuperview()
+            backdrop.removeFromSuperview()
+        }
+    }
+    
+    private func makeKeyIfNeededWithSlideOutAnimation() {
+        guard let window = window else {
+            return makeKeyIfNeeded()
+        }
+        
+        let image = window.rootViewController!.view.srk_takeSnapshot()
+        
+        let imageView = UIImageView(image: image)
+        imageView.frame = window.bounds
+        
+        window.addSubview(imageView)
+        
+        makeKeyIfNeeded()
+        
+        window.bringSubviewToFront(imageView)
+        
+        let backdrop = UIView(frame: window.bounds)
+        backdrop.backgroundColor = .black
+        
+        window.insertSubview(backdrop, belowSubview: imageView)
+        
+        rootViewController.view.transform = .init(
+            translationX: window.bounds.width / 2,
+            y: .zero
+        )
+        
+        UIView.animate(
+            withDuration: 0.6,
+            delay: 0,
+            usingSpringWithDamping: 0.8,
+            initialSpringVelocity: 2,
+            options: []
+        ) {
+            imageView.transform = CGAffineTransform(
+                translationX: -imageView.frame.width,
+                y: .zero
+            )
+            backdrop.alpha = 0
+            self.rootViewController.view.transform = .identity
+        } completion: { _ in
+            imageView.removeFromSuperview()
+            backdrop.removeFromSuperview()
+        }
+    }
+    
 }
+
+extension UIView {
+
+    fileprivate func srk_takeSnapshot() -> UIImage {
+        UIGraphicsBeginImageContextWithOptions(bounds.size, false, UIScreen.main.scale)
+        drawHierarchy(in: self.bounds, afterScreenUpdates: true)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image!
+    }
+}
+

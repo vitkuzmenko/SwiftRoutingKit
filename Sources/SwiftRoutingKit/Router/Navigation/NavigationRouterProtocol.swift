@@ -9,7 +9,7 @@
 import UIKit
 
 public enum NavigationRouterPresentaionMode {
-    case root(hideNavigationBar: Bool), push(animated: Bool), present(animated: Bool)
+    case root(hideNavigationBar: Bool), push(animated: Bool), present(animated: Bool), popover(UIView)
 }
 
 public protocol NavigationRouterProtocol: RouterProtocol {
@@ -24,10 +24,22 @@ public protocol NavigationRouterProtocol: RouterProtocol {
     func push(_ scene: Scene?, animated: Bool, completion: (() -> Void)?)
     
     func cut(fromScene: Scene?, toScene: Scene?)
+    func cut(scene: Scene?)
+    func cut<T>(allScenes type: T.Type)
     
     func popScene()
     func popScene(animated: Bool)
-    func popToScene(_ scene: Scene?, animated: Bool)
+    
+    @discardableResult
+    func popToScene(_ scene: Scene?, animated: Bool) -> Bool
+    @discardableResult
+    func popToScene(_ scene: Scene?, animated: Bool, completion: (() -> Void)?) -> Bool
+    
+    @discardableResult
+    func popToFirstScene<T>(animated: Bool) -> T?
+    @discardableResult
+    func popToFirstScene<T>(animated: Bool, completion: ((T) -> Void)?) -> T?
+    
     func popToRootScene(animated: Bool)
     
     func setRootScene(_ scene: Scene?)
@@ -35,6 +47,8 @@ public protocol NavigationRouterProtocol: RouterProtocol {
     func setScenes(_ scene: [Scene])
     
     func show(scene: Scene?, mode: NavigationRouterPresentaionMode)
+    
+    func presentPopover(scene: Scene?, sourceView: UIView)
     
 }
 
@@ -64,6 +78,8 @@ extension NavigationRouterProtocol {
             push(scene, animated: animated)
         case let .present(animated):
             present(scene, animated: animated)
+        case let .popover(sourceView):
+            presentPopover(scene: scene, sourceView: sourceView)
         }
     }
     

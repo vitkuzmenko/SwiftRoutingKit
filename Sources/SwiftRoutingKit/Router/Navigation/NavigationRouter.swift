@@ -8,7 +8,11 @@
 
 import UIKit
 
-public final class NavigationRouter: Router, NavigationRouterProtocol {
+public final class NavigationRouter: Router, NavigationRouterProtocol, UIPopoverPresentationControllerDelegate {
+    
+    deinit {
+        navigationController.viewControllers = []
+    }
     
     private var completions: [UIViewController: () -> Void] = [:]
     
@@ -63,17 +67,64 @@ public final class NavigationRouter: Router, NavigationRouterProtocol {
         }
     }
     
+    public func cut(scene: (any Scene)?) {
+        self.navigationController.viewControllers.removeAll { rhs in
+            rhs === scene?.toScene()
+        }
+    }
+    
+    public func cut<T>(allScenes type: T.Type) {
+        self.navigationController.viewControllers.removeAll { rhs in
+            rhs is T
+        }
+    }
+    
     public func popScene(animated: Bool) {
         if let controller = navigationController.popViewController(animated: animated) {
             runCompletion(for: controller)
         }
     }
     
-    public func popToScene(_ scene: Scene?, animated: Bool) {
+    @discardableResult
+    public func popToScene(_ scene: (any Scene)?, animated: Bool) -> Bool {
+        popToScene(scene, animated: animated, completion: nil)
+    }
+    
+    @discardableResult
+    public func popToScene(_ scene: (any Scene)?, animated: Bool, completion: (() -> Void)?) -> Bool {
         guard let viewController = navigationController.viewControllers.first(where: { $0 == scene?.toScene() }) else {
-            return
+            return false
         }
-        navigationController.popToViewController(viewController, animated: animated)
+        let popBlock = { [weak self] in
+            self?.navigationController.popToViewController(viewController, animated: animated)
+        }
+        if animated, let completion {
+            CATransaction.begin()
+            CATransaction.setCompletionBlock(completion)
+            _ = popBlock()
+            CATransaction.commit()
+        } else {
+            _ = popBlock()
+            completion?()
+        }
+        return true
+    }
+    
+    public func popToFirstScene<T>(animated: Bool) -> T? {
+        popToFirstScene(animated: animated, completion: nil)
+    }
+    
+    public func popToFirstScene<T>(animated: Bool, completion: ((T) -> Void)?) -> T? {
+        guard let viewController = navigationController.viewControllers.first(where: { $0 is T }) else {
+            return nil
+        }
+        guard let scene = viewController as? T else {
+            return nil
+        }
+        popToScene(viewController, animated: animated) {
+            completion?(scene)
+        }
+        return scene
     }
     
     public func setRootScene(_ scene: Scene?, hideBar: Bool) {
@@ -101,6 +152,20 @@ public final class NavigationRouter: Router, NavigationRouterProtocol {
         guard let completion = completions[controller] else { return }
         completion()
         completions.removeValue(forKey: controller)
+    }
+    
+    public func presentPopover(scene: Scene?, sourceView: UIView) {
+        guard let vc = scene?.toScene() else { return }
+        vc.modalPresentationStyle = .popover
+        vc.popoverPresentationController?.sourceView = sourceView
+        vc.popoverPresentationController?.sourceRect = sourceView.bounds
+        vc.popoverPresentationController?.permittedArrowDirections = [.up, .down]
+        vc.popoverPresentationController?.delegate = self
+        navigationController.present(vc, animated: true)
+    }
+    
+    public func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+        .none
     }
     
 }

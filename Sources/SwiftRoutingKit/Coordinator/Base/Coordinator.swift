@@ -23,6 +23,10 @@ open class Coordinator: NSObject, CoordinatorProtocol {
         
     }
     
+    open func impact() {
+        
+    }
+    
     open func addChild(_ coordinator: Coordinator?) {
         guard let coordinator = coordinator else { return }
         for element in childCoordinators where element === coordinator {
