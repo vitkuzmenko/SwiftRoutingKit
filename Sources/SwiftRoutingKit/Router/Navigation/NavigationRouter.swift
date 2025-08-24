@@ -43,12 +43,15 @@ public final class NavigationRouter: Router, NavigationRouterProtocol, UIPopover
         if let completion = completion {
             completions[controller] = completion
         }
-        navigationController.pushViewController(controller, animated: animated)
         if animated {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+            CATransaction.begin()
+            CATransaction.setCompletionBlock { [weak self] in
                 self?.runCompletion(for: controller)
             }
+            navigationController.pushViewController(controller, animated: animated)
+            CATransaction.commit()
         } else {
+            navigationController.pushViewController(controller, animated: animated)
             runCompletion(for: controller)
         }
     }
@@ -150,8 +153,8 @@ public final class NavigationRouter: Router, NavigationRouterProtocol, UIPopover
     
     private func runCompletion(for controller: UIViewController) {
         guard let completion = completions[controller] else { return }
-        completion()
         completions.removeValue(forKey: controller)
+        DispatchQueue.main.async(execute: completion)
     }
     
     public func presentPopover(scene: Scene?, sourceView: UIView) {
