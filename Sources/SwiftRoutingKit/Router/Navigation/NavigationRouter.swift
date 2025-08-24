@@ -40,6 +40,13 @@ public final class NavigationRouter: Router, NavigationRouterProtocol {
             completions[controller] = completion
         }
         navigationController.pushViewController(controller, animated: animated)
+        if animated {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+                self?.runCompletion(for: controller)
+            }
+        } else {
+            runCompletion(for: controller)
+        }
     }
     
     public func cut(fromScene: Scene?, toScene: Scene?) {
