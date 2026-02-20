@@ -9,16 +9,16 @@
 import Foundation
 import Swinject
 
-public protocol CoordinatorProtocol: AnyObject {
+public protocol RoutingCoordinatorProtocol: AnyObject {
     
     var resolver: Resolver { get }
     
     func start()
     
-    func addChild(_ coordinator: Coordinator?)
+    func addChild(_ coordinator: RoutingCoordinator?)
     
-    func child<T: Coordinator>(for type: T.Type) -> T?
+    func child<T: RoutingCoordinator>(for type: T.Type) -> T?
     
-    func removeChild(_ coordinator: Coordinator?)
+    func removeChild(_ coordinator: RoutingCoordinator?)
     
 }

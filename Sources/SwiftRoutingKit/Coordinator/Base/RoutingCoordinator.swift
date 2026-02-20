@@ -9,9 +9,9 @@
 import Foundation
 import Swinject
 
-open class Coordinator: NSObject, CoordinatorProtocol {
+open class RoutingCoordinator: NSObject, RoutingCoordinatorProtocol {
     
-    open var childCoordinators: [CoordinatorProtocol] = []
+    open var childCoordinators: [RoutingCoordinatorProtocol] = []
     
     public let resolver: Resolver
     
@@ -27,7 +27,7 @@ open class Coordinator: NSObject, CoordinatorProtocol {
         
     }
     
-    open func addChild(_ coordinator: Coordinator?) {
+    open func addChild(_ coordinator: RoutingCoordinator?) {
         guard let coordinator = coordinator else { return }
         for element in childCoordinators where element === coordinator {
             return
@@ -35,11 +35,11 @@ open class Coordinator: NSObject, CoordinatorProtocol {
         childCoordinators.append(coordinator)
     }
     
-    open func child<T: Coordinator>(for type: T.Type) -> T? {
+    open func child<T: RoutingCoordinator>(for type: T.Type) -> T? {
         return childCoordinators.first(where: { $0 is T }) as? T
     }
     
-    open func removeChild(_ coordinator: Coordinator?) {
+    open func removeChild(_ coordinator: RoutingCoordinator?) {
         guard childCoordinators.isEmpty == false, let coordinator = coordinator else { return }
         for (index, element) in childCoordinators.reversed().enumerated() where element === coordinator {
             childCoordinators.remove(at: index)

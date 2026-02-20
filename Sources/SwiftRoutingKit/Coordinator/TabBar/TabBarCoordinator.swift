@@ -10,11 +10,11 @@ import Foundation
 import Swinject
 import UIKit
 
-open class TabBarCoordinator: Coordinator, TabBarCoordinatorProtocol {
+open class TabBarCoordinator: RoutingCoordinator, TabBarCoordinatorProtocol {
     
     public let router: TabBarRouterProtocol
     
-    public var childTabCoordinators: [CoordinatorProtocol] = []
+    public var childTabCoordinators: [RoutingCoordinatorProtocol] = []
     
     public init(router: TabBarRouterProtocol, resolver: Resolver) {
         self.router = router
@@ -30,11 +30,11 @@ open class TabBarCoordinator: Coordinator, TabBarCoordinatorProtocol {
         coordinators[initialIndex].start()
     }
     
-    public var selectedCoordinator: CoordinatorProtocol {
+    public var selectedCoordinator: RoutingCoordinatorProtocol {
         return childTabCoordinators[router.tabBarController.selectedIndex]
     }
     
-    public func selectFirst<T: CoordinatorProtocol>(of: T.Type, start: Bool = true) {
+    public func selectFirst<T: RoutingCoordinatorProtocol>(of: T.Type, start: Bool = true) {
         if let index = childTabCoordinators.firstIndex(where: { $0 is T }) {
             router.tabBarController.selectedIndex = index
             if start {
@@ -43,7 +43,7 @@ open class TabBarCoordinator: Coordinator, TabBarCoordinatorProtocol {
         }
     }
     
-    public func getFirst<T: CoordinatorProtocol>(of: T.Type) -> T? {
+    public func getFirst<T: RoutingCoordinatorProtocol>(of: T.Type) -> T? {
         if let index = childTabCoordinators.firstIndex(where: { $0 is T }) {
             return childTabCoordinators[index] as? T
         } else {
