@@ -52,7 +52,7 @@ open class TabBarCoordinator: RoutingCoordinator, TabBarCoordinatorProtocol {
     }
 
     public func startCoorinatorForSelectedIndexIfNeeded() {
-        router.tabBarController.selectedIndex = router.tabBarController.selectedIndex
+//        router.tabBarController.selectedIndex = router.tabBarController.selectedIndex
         if
             let coordinator = self.childTabCoordinators[router.tabBarController.selectedIndex] as? NavigationCoordinator
         {
