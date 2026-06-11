@@ -35,10 +35,31 @@ open class TabBarCoordinator: RoutingCoordinator, TabBarCoordinatorProtocol {
     }
     
     public func selectFirst<T: RoutingCoordinatorProtocol>(of: T.Type, start: Bool = true) {
-        if let index = childTabCoordinators.firstIndex(where: { $0 is T }) {
-            router.tabBarController.selectedIndex = index
+        guard let index = childTabCoordinators.firstIndex(where: { $0 is T }) else {
+            return
+        }
+        selectTab(at: index, start: start)
+    }
+
+    /// Selects a tab programmatically without re-entrant KVO on `selectedIndex`.
+    ///
+    /// Setting `selectedIndex` synchronously inside animation completion handlers can corrupt
+    /// Foundation's KVO lock (`_NSSetUnsignedLongLongValueAndNotify`). Deferring the
+    /// assignment to the next main run loop avoids that crash.
+    private func selectTab(at index: Int, start: Bool) {
+        if router.tabBarController.selectedIndex == index {
             if start {
                 startCoorinatorForSelectedIndexIfNeeded()
+            }
+            return
+        }
+
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            guard index < self.childTabCoordinators.count else { return }
+            self.router.tabBarController.selectedIndex = index
+            if start {
+                self.startCoorinatorForSelectedIndexIfNeeded()
             }
         }
     }
