@@ -26,12 +26,14 @@ open class TabBarCoordinator: RoutingCoordinator, TabBarCoordinatorProtocol {
         childTabCoordinators = coordinators
         let scenes = coordinators.compactMap({ $0.router.navigationController })
         router.set(scenes)
-        router.tabBarController.selectedIndex = initialIndex
+        performProgrammaticTabSelection(at: initialIndex, start: false)
+        guard coordinators.indices.contains(initialIndex) else { return }
         coordinators[initialIndex].start()
     }
     
     public var selectedCoordinator: RoutingCoordinatorProtocol {
-        return childTabCoordinators[router.tabBarController.selectedIndex]
+        let index = router.tabBarController.selectedIndex
+        return childTabCoordinators[index]
     }
     
     public func selectFirst<T: RoutingCoordinatorProtocol>(of: T.Type, start: Bool = true) {
@@ -47,6 +49,19 @@ open class TabBarCoordinator: RoutingCoordinator, TabBarCoordinatorProtocol {
     /// Foundation's KVO lock (`_NSSetUnsignedLongLongValueAndNotify`). Deferring the
     /// assignment to the next main run loop avoids that crash.
     private func selectTab(at index: Int, start: Bool) {
+        DispatchQueue.main.async { [weak self] in
+            self?.performProgrammaticTabSelection(at: index, start: start)
+        }
+    }
+
+    private func performProgrammaticTabSelection(at index: Int, start: Bool) {
+        guard
+            let viewControllers = router.tabBarController.viewControllers,
+            viewControllers.indices.contains(index)
+        else {
+            return
+        }
+
         if router.tabBarController.selectedIndex == index {
             if start {
                 startCoorinatorForSelectedIndexIfNeeded()
@@ -54,13 +69,14 @@ open class TabBarCoordinator: RoutingCoordinator, TabBarCoordinatorProtocol {
             return
         }
 
-        DispatchQueue.main.async { [weak self] in
-            guard let self else { return }
-            guard index < self.childTabCoordinators.count else { return }
-            self.router.tabBarController.selectedIndex = index
-            if start {
-                self.startCoorinatorForSelectedIndexIfNeeded()
-            }
+        let tabBarController = router.tabBarController
+        let previousDelegate = tabBarController.delegate
+        tabBarController.delegate = nil
+        tabBarController.selectedViewController = viewControllers[index]
+        tabBarController.delegate = previousDelegate
+
+        if start {
+            startCoorinatorForSelectedIndexIfNeeded()
         }
     }
     
@@ -73,9 +89,10 @@ open class TabBarCoordinator: RoutingCoordinator, TabBarCoordinatorProtocol {
     }
 
     public func startCoorinatorForSelectedIndexIfNeeded() {
-//        router.tabBarController.selectedIndex = router.tabBarController.selectedIndex
+        let selectedIndex = router.tabBarController.selectedIndex
+        guard childTabCoordinators.indices.contains(selectedIndex) else { return }
         if
-            let coordinator = self.childTabCoordinators[router.tabBarController.selectedIndex] as? NavigationCoordinator
+            let coordinator = self.childTabCoordinators[selectedIndex] as? NavigationCoordinator
         {
             if coordinator.router.navigationController.viewControllers.isEmpty {
                 coordinator.start()

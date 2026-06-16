@@ -6,35 +6,35 @@
 //  Copyright © 2019 Kuzmenko.info. All rights reserved.
 //
 
-import UIKit
 import Swinject
+import UIKit
 
 open class NavigationCoordinator: RoutingCoordinator, NavigationCoordinatorProtocol {
-    
-    public let router: NavigationRouterProtocol
-    
-    public var flowDidDismiss: (() -> Void)? = nil
-    
-    public init(router: NavigationRouterProtocol, resolver: Resolver) {
-        self.router = router
-        super.init(resolver: resolver)
-        router.navigationController.presentationController?.delegate = self
-    }
-    
-    public func present(_ scene: (any Scene)?) {
-        router.present(scene)
-    }
-    
-    public func present(_ scene: (any Scene)?, animated: Bool) {
-        router.present(scene, animated: animated)
-    }
+
+  public let router: NavigationRouterProtocol
+
+  public var flowDidDismiss: (() -> Void)? = nil
+
+  public init(router: NavigationRouterProtocol, resolver: Resolver) {
+    self.router = router
+    super.init(resolver: resolver)
+    router.navigationController.presentationController?.delegate = self
+  }
+
+  public func present(_ scene: (any Scene)?) {
+    router.present(scene)
+  }
+
+  public func present(_ scene: (any Scene)?, animated: Bool) {
+    router.present(scene, animated: animated)
+  }
 
 }
 
 extension NavigationCoordinator: UIAdaptivePresentationControllerDelegate {
-    
-    public func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
-        flowDidDismiss?()
-    }
-    
+
+  public func presentationControllerDidDismiss(_ presentationController: UIPresentationController) {
+    flowDidDismiss?()
+  }
+
 }

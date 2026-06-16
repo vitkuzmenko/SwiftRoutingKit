@@ -10,40 +10,41 @@ import Foundation
 import Swinject
 
 open class RoutingCoordinator: NSObject, RoutingCoordinatorProtocol {
-    
-    open var childCoordinators: [RoutingCoordinatorProtocol] = []
-    
-    public let resolver: Resolver
-    
-    public init(resolver: Resolver) {
-        self.resolver = resolver
+
+  open var childCoordinators: [RoutingCoordinatorProtocol] = []
+
+  public let resolver: Resolver
+
+  public init(resolver: Resolver) {
+    self.resolver = resolver
+  }
+
+  open func start() {
+
+  }
+
+  open func impact() {
+
+  }
+
+  open func addChild(_ coordinator: RoutingCoordinator?) {
+    guard let coordinator = coordinator else { return }
+    for element in childCoordinators where element === coordinator {
+      return
     }
-    
-    open func start() {
-        
+    childCoordinators.append(coordinator)
+  }
+
+  open func child<T: RoutingCoordinator>(for type: T.Type) -> T? {
+    return childCoordinators.first(where: { $0 is T }) as? T
+  }
+
+  open func removeChild(_ coordinator: RoutingCoordinator?) {
+    guard childCoordinators.isEmpty == false, let coordinator = coordinator else { return }
+    for (index, element) in childCoordinators.enumerated() where element === coordinator
+    {
+      childCoordinators.remove(at: index)
+      break
     }
-    
-    open func impact() {
-        
-    }
-    
-    open func addChild(_ coordinator: RoutingCoordinator?) {
-        guard let coordinator = coordinator else { return }
-        for element in childCoordinators where element === coordinator {
-            return
-        }
-        childCoordinators.append(coordinator)
-    }
-    
-    open func child<T: RoutingCoordinator>(for type: T.Type) -> T? {
-        return childCoordinators.first(where: { $0 is T }) as? T
-    }
-    
-    open func removeChild(_ coordinator: RoutingCoordinator?) {
-        guard childCoordinators.isEmpty == false, let coordinator = coordinator else { return }
-        for (index, element) in childCoordinators.reversed().enumerated() where element === coordinator {
-            childCoordinators.remove(at: index)
-            break
-        }
-    }
+  }
 }
