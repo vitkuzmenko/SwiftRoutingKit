@@ -62,11 +62,11 @@ open class Router: NSObject, RouterProtocol {
     }
     
     private func makeKeyIfNeededWithSlideInAnimation() {
-        guard let window = window else {
+        guard let window = window, let currentViewController = window.rootViewController else {
             return makeKeyIfNeeded()
         }
         
-        let image = window.rootViewController!.view.srk_takeSnapshot()
+        let image = currentViewController.view.srk_takeSnapshot()
         
         let imageView = UIImageView(image: image)
         imageView.frame = window.bounds
@@ -106,11 +106,11 @@ open class Router: NSObject, RouterProtocol {
     }
     
     private func makeKeyIfNeededWithSlideOutAnimation() {
-        guard let window = window else {
+        guard let window = window, let currentViewController = window.rootViewController else {
             return makeKeyIfNeeded()
         }
         
-        let image = window.rootViewController!.view.srk_takeSnapshot()
+        let image = currentViewController.view.srk_takeSnapshot()
         
         let imageView = UIImageView(image: image)
         imageView.frame = window.bounds
@@ -155,11 +155,9 @@ open class Router: NSObject, RouterProtocol {
 extension UIView {
 
     fileprivate func srk_takeSnapshot() -> UIImage {
-        UIGraphicsBeginImageContextWithOptions(bounds.size, false, UIScreen.main.scale)
-        drawHierarchy(in: self.bounds, afterScreenUpdates: true)
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return image!
+        UIGraphicsImageRenderer(bounds: bounds).image { _ in
+            drawHierarchy(in: bounds, afterScreenUpdates: true)
+        }
     }
 }
 
